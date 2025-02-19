@@ -1,6 +1,7 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
 import { get, post, ssePost } from './base'
 import type { Feedbacktype } from '@/types/app'
+import { getUrlParams } from '@/utils/auth';
 
 export const sendChatMessage = async (
   body: Record<string, any>,
@@ -32,31 +33,65 @@ export const sendChatMessage = async (
     onWorkflowFinished: IOnWorkflowFinished
   },
 ) => {
+  const { userid } = getUrlParams();
   return ssePost('chat-messages', {
     body: {
       ...body,
       response_mode: 'streaming',
+      user: userid,
     },
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
 
 export const fetchConversations = async () => {
-  return get('conversations', { params: { limit: 100, first_id: '' } })
+  const { userid } = getUrlParams();
+  return get('conversations', { 
+    params: { 
+      limit: 100, 
+      first_id: '',
+      user: userid 
+    } 
+  })
 }
 
 export const fetchChatList = async (conversationId: string) => {
-  return get('messages', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+  const { userid } = getUrlParams();
+  return get('messages', { 
+    params: { 
+      conversation_id: conversationId, 
+      limit: 20, 
+      last_id: '',
+      user: userid
+    } 
+  })
 }
 
 // init value. wait for server update
 export const fetchAppParams = async () => {
-  return get('parameters')
+  const { userid } = getUrlParams();
+  return get('parameters', {
+    params: {
+      user: userid
+    }
+  })
 }
 
 export const updateFeedback = async ({ url, body }: { url: string; body: Feedbacktype }) => {
-  return post(url, { body })
+  const { userid } = getUrlParams();
+  return post(url, { 
+    body: {
+      ...body,
+      user: userid
+    }
+  })
 }
 
 export const generationConversationName = async (id: string) => {
-  return post(`conversations/${id}/name`, { body: { auto_generate: true } })
+  const { userid } = getUrlParams();
+  return post(`conversations/${id}/name`, { 
+    body: { 
+      auto_generate: true,
+      user: userid 
+    } 
+  })
 }

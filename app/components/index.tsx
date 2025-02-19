@@ -22,6 +22,8 @@ import AppUnavailable from '@/app/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
+import { validateAccess, getUrlParams } from '@/utils/auth';
+
 
 export type IMainProps = {
   params: any
@@ -49,7 +51,28 @@ const Main: FC<IMainProps> = () => {
     transfer_methods: [TransferMethod.local_file],
   })
 
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isValidating, setIsValidating] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
+
   useEffect(() => {
+
+    const { userid, verify } = getUrlParams();
+
+    if (!userid || !verify) {
+      setIsAuthorized(false);
+      setIsValidating(false);
+      setAuthError('访问未授权，请检查访问链接是否正确');
+      return;
+    }
+
+    const isValid = validateAccess(userid, verify);
+    setIsAuthorized(isValid);
+    setIsValidating(false);
+    if (!isValid) {
+      setAuthError('访问未授权，请检查访问链接是否正确');
+    }
+
     if (APP_INFO?.title)
       document.title = `${APP_INFO.title} - Powered by Dify`
   }, [APP_INFO?.title])
@@ -610,6 +633,31 @@ const Main: FC<IMainProps> = () => {
         copyRight={APP_INFO.copyright || APP_INFO.title}
       />
     )
+  }
+
+  if (isValidating) {
+    return <Loading />;
+  }
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="rounded-lg bg-red-50 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                {authError || '访问未授权'}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (appUnavailable)
