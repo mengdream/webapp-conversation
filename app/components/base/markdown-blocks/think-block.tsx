@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 
 const hasEndThink = (children: any): boolean => {
     if (typeof children === 'string')
@@ -37,7 +36,6 @@ const removeEndThink = (children: any): any => {
 const ThinkBlock = ({ children, ...props }: any) => {
     const isComplete = hasEndThink(children)
     const displayContent = removeEndThink(children)
-    const { t } = useTranslation()
 
     return (
         <details
@@ -65,7 +63,7 @@ const ThinkBlock = ({ children, ...props }: any) => {
                             d="M9 5l7 7-7 7"
                         />
                     </svg>
-                    {isComplete ? t('common.chat.thought') : t('common.chat.thinking')}
+                    {isComplete ? '思考完成' : '思考中...'}
                 </div>
             </summary>
             <div className="text-gray-500 p-3 ml-2 bg-gray-50 border-l border-gray-300">

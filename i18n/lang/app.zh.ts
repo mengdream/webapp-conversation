@@ -3,6 +3,10 @@ const translation = {
     welcome: '欢迎使用',
     appUnavailable: '应用不可用',
     appUnkonwError: '应用不可用',
+    chat: {
+      thinking: '思考中...',
+      thought: '思考结束',
+    },
   },
   chat: {
     newChat: '新对话',
