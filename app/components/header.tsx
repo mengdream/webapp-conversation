@@ -4,13 +4,16 @@ import {
   Bars3Icon,
   PencilSquareIcon,
 } from '@heroicons/react/24/solid'
-import AppIcon from '@/app/components/base/app-icon'
+import Image from 'next/image'
+import logoImage from './welcome/icons/zlyylogo.png'
+
 export type IHeaderProps = {
   title: string
   isMobile?: boolean
   onShowSideBar?: () => void
   onCreateNewChat?: () => void
 }
+
 const Header: FC<IHeaderProps> = ({
   title,
   isMobile,
@@ -30,8 +33,17 @@ const Header: FC<IHeaderProps> = ({
         )
         : <div></div>}
       <div className='flex items-center space-x-2'>
-        <AppIcon size="small" />
-        <div className=" text-sm text-gray-800 font-bold">{title}</div>
+        <div className="relative w-6 h-6">
+          <Image
+            src={logoImage}
+            alt="ZLYY Logo"
+            width={24}
+            height={24}
+            className="object-contain"
+            priority
+          />
+        </div>
+        <div className="text-sm text-gray-800 font-bold">{title}</div>
       </div>
       {isMobile
         ? (

@@ -74,7 +74,7 @@ const Main: FC<IMainProps> = () => {
     }
 
     if (APP_INFO?.title)
-      document.title = `${APP_INFO.title} - Powered by Dify`
+      document.title = `${APP_INFO.title} - Powered by 信息工程部`
   }, [APP_INFO?.title])
 
   // onData change thought (the produce obj). https://github.com/immerjs/immer/issues/576
