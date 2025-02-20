@@ -22,8 +22,7 @@ import AppUnavailable from '@/app/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
-import { validateAccess, getUrlParams } from '@/utils/auth';
-
+import { getUrlParams, validateAccess } from '@/utils/auth'
 
 export type IMainProps = {
   params: any
@@ -51,27 +50,25 @@ const Main: FC<IMainProps> = () => {
     transfer_methods: [TransferMethod.local_file],
   })
 
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isValidating, setIsValidating] = useState(true);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isValidating, setIsValidating] = useState(true)
+  const [authError, setAuthError] = useState<string | null>(null)
 
   useEffect(() => {
-
-    const { userid, verify } = getUrlParams();
+    const { userid, current, verify } = getUrlParams()
 
     if (!userid || !verify) {
-      setIsAuthorized(false);
-      setIsValidating(false);
-      setAuthError('访问未授权，请检查访问链接是否正确');
-      return;
+      setIsAuthorized(false)
+      setIsValidating(false)
+      setAuthError('访问未授权，请检查访问链接是否正确')
+      return
     }
 
-    const isValid = validateAccess(userid, verify);
-    setIsAuthorized(isValid);
-    setIsValidating(false);
-    if (!isValid) {
-      setAuthError('访问未授权，请检查访问链接是否正确');
-    }
+    const isValid = validateAccess(userid, current, verify)
+    setIsAuthorized(isValid)
+    setIsValidating(false)
+    if (!isValid)
+      setAuthError('访问未授权，请检查访问链接是否正确')
 
     if (APP_INFO?.title)
       document.title = `${APP_INFO.title} - Powered by 信息工程部`
@@ -635,9 +632,8 @@ const Main: FC<IMainProps> = () => {
     )
   }
 
-  if (isValidating) {
-    return <Loading />;
-  }
+  if (isValidating)
+    return <Loading />
 
   if (!isAuthorized) {
     return (
@@ -657,7 +653,7 @@ const Main: FC<IMainProps> = () => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   if (appUnavailable)
