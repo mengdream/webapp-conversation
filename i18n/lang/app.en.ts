@@ -26,6 +26,7 @@ const translation = {
       'privacy policy',
     privacyPolicyRight:
       ' provided by the app developer.',
+    deleteConfirm: 'Are you sure you want to delete this conversation?',
   },
   errorMessage: {
     valueOfVarRequired: 'Variables value can not be empty',

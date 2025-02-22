@@ -57,7 +57,7 @@ const Main: FC<IMainProps> = () => {
   useEffect(() => {
     const { userid, current, verify } = getUrlParams()
 
-    if (!userid || !verify) {
+    if (!userid || !verify || !current) {
       setIsAuthorized(false)
       setIsValidating(false)
       setAuthError('访问未授权，请检查访问链接是否正确')
@@ -187,6 +187,16 @@ const Main: FC<IMainProps> = () => {
     // trigger handleConversationSwitch
     setCurrConversationId(id, APP_ID)
     hideSidebar()
+  }
+
+  const handleConversationDeleted = (deletedId: string) => {
+    setConversationList(prevList => prevList.filter(item => item.id !== deletedId))
+    if (currConversationId === deletedId) {
+      setCurrConversationId('-1', APP_ID)
+      setChatNotStarted()
+      resetNewConversationInputs()
+      setChatList([])
+    }
   }
 
   /*
@@ -626,6 +636,7 @@ const Main: FC<IMainProps> = () => {
       <Sidebar
         list={conversationList}
         onCurrentIdChange={handleConversationIdChange}
+        onConversationDeleted={handleConversationDeleted}
         currentId={currConversationId}
         copyRight={APP_INFO.copyright || APP_INFO.title}
       />

@@ -1,5 +1,5 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
-import { get, post, ssePost } from './base'
+import { get, post, ssePost, del } from './base'
 import type { Feedbacktype } from '@/types/app'
 import { getUrlParams } from '@/utils/auth';
 
@@ -91,6 +91,15 @@ export const generationConversationName = async (id: string) => {
   return post(`conversations/${id}/name`, { 
     body: { 
       auto_generate: true,
+      user: userid 
+    } 
+  })
+}
+
+export const deleteConversation = async (conversationId: string) => {
+  const { userid } = getUrlParams();
+  return del(`conversations/${conversationId}`, { 
+    body: { 
       user: userid 
     } 
   })

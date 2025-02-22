@@ -22,6 +22,7 @@ const translation = {
     privacyPolicyLeft: '请阅读由该应用开发者提供的',
     privacyPolicyMiddle: '隐私政策',
     privacyPolicyRight: '。',
+    deleteConfirm: '确定要删除这个对话吗？',
   },
   errorMessage: {
     valueOfVarRequired: '变量值必填',

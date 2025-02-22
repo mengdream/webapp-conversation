@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next'
 import {
   ChatBubbleOvalLeftEllipsisIcon,
   PencilSquareIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline'
 import { ChatBubbleOvalLeftEllipsisIcon as ChatBubbleOvalLeftEllipsisSolidIcon } from '@heroicons/react/24/solid'
 import Button from '@/app/components/base/button'
 // import Card from './card'
 import type { ConversationItem } from '@/types/app'
+import { deleteConversation } from '@/service'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
@@ -20,6 +22,7 @@ export type ISidebarProps = {
   copyRight: string
   currentId: string
   onCurrentIdChange: (id: string) => void
+  onConversationDeleted: (id: string) => void
   list: ConversationItem[]
 }
 
@@ -27,6 +30,7 @@ const Sidebar: FC<ISidebarProps> = ({
   copyRight,
   currentId,
   onCurrentIdChange,
+  onConversationDeleted,
   list,
 }) => {
   const { t } = useTranslation()
@@ -69,7 +73,18 @@ const Sidebar: FC<ISidebarProps> = ({
                 )}
                 aria-hidden="true"
               />
-              {item.name}
+              <div className="flex-1 truncate">{item.name}</div>
+              <TrashIcon
+                className="h-5 w-5 text-gray-400 hover:text-red-500 invisible group-hover:visible"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (window.confirm(t('app.chat.deleteConfirm'))) {
+                    deleteConversation(item.id).then(() => {
+                      onConversationDeleted(item.id)
+                    })
+                  }
+                }}
+              />
             </div>
           )
         })}
@@ -78,7 +93,7 @@ const Sidebar: FC<ISidebarProps> = ({
         <Card><div className="flex flex-row items-center"><ChatBubbleOvalLeftEllipsisSolidIcon className="text-primary-600 h-6 w-6 mr-2" /><span>LangGenius</span></div></Card>
       </a> */}
       <div className="flex flex-shrink-0 pr-4 pb-4 pl-4">
-        <div className="text-gray-400 font-normal text-xs">© {copyRight} {(new Date()).getFullYear()}</div>
+        <div className="text-gray-400 font-normal text-xs"> {copyRight} {(new Date()).getFullYear()}</div>
       </div>
     </div>
   )
