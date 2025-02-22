@@ -11,8 +11,14 @@ mkdir -p $DEPLOY_REPO_DIR
 # 清理旧的部署文件
 rm -rf $DEPLOY_DIR/*
 
+# 临时移除 .env.local（如果存在）
+[ -f .env.local ] && mv .env.local .env.local.backup
+
 # 运行生产构建
-npm run build
+NODE_ENV=production npm run build
+
+# 恢复 .env.local（如果之前存在）
+[ -f .env.local.backup ] && mv .env.local.backup .env.local
 
 # 复制必要的文件到部署目录
 cp -r .next $DEPLOY_DIR/
