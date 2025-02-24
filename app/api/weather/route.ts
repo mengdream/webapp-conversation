@@ -1,33 +1,23 @@
 import { NextResponse } from 'next/server';
 
-import { NextRequest } from 'next/server';
-
-export const dynamic = 'force-dynamic';
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   const weatherUrl = process.env.NEXT_PUBLIC_WEATHER_URL;
   const appKey = process.env.NEXT_PUBLIC_WEATHER_APP_KEY;
   const sign = process.env.NEXT_PUBLIC_WEATHER_SIGN;
   const worksheetId = process.env.NEXT_PUBLIC_WEATHER_WORKSHEET_ID;
   const rowId = process.env.NEXT_PUBLIC_WEATHER_ROW_ID;
 
-  const requestUrl = `${weatherUrl}api/v2/open/worksheet/getRowById?appKey=${appKey}&sign=${sign}&worksheetId=${worksheetId}&rowId=${rowId}`;
-
   try {
-    const response = await fetch(requestUrl);
+    const response = await fetch(
+      `${weatherUrl}api/v2/open/worksheet/getRowById?appKey=${appKey}&sign=${sign}&worksheetId=${worksheetId}&rowId=${rowId}`
+    );
 
     if (!response.ok) {
       throw new Error('Weather API response was not ok');
     }
 
     const data = await response.json();
-    return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
-    });
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching weather data:', error);
     return NextResponse.json(
