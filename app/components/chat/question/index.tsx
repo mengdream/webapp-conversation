@@ -15,7 +15,7 @@ const Question: FC<IQuestionProps> = ({ id, content, useCurrentUserAvatar, imgSr
   const userName = ''
   return (
     <div className='flex items-start justify-end' key={id}>
-      <div>
+      <div className='max-w-[85%] break-words'>
         <div className={`${s.question} relative text-sm text-gray-900`}>
           <div
             className={'mr-2 py-3 px-4 bg-blue-500 rounded-tl-2xl rounded-b-2xl'}
@@ -23,7 +23,9 @@ const Question: FC<IQuestionProps> = ({ id, content, useCurrentUserAvatar, imgSr
             {imgSrcs && imgSrcs.length > 0 && (
               <ImageGallery srcs={imgSrcs} />
             )}
-            <Markdown content={content} />
+            <div className='break-words'>
+              <Markdown content={content} />
+            </div>
           </div>
         </div>
       </div>
