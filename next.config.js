@@ -18,7 +18,12 @@ const nextConfig = {
     },
     images: {
         remotePatterns: [
-            // ... other patterns ...
+            {
+                protocol: 'http',
+                hostname: 'app1.showapi.com',
+                port: '',
+                pathname: '/**',
+            },
         ],
     },
 }

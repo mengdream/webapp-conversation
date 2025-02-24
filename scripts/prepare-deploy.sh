@@ -25,6 +25,10 @@ cp -r .next $DEPLOY_DIR/
 # 删除缓存文件
 rm -rf $DEPLOY_DIR/.next/cache
 
+# Copy static files
+cp -r public $DEPLOY_DIR/
+
+# Copy package files and configs
 cp package.json $DEPLOY_DIR/
 cp package-lock.json $DEPLOY_DIR/
 cp .env.production $DEPLOY_DIR/ 2>/dev/null || echo "No .env.production file"

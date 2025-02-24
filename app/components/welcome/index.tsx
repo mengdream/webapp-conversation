@@ -9,6 +9,7 @@ import type { AppInfo, PromptConfig } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
 import { DEFAULT_VALUE_MAX_LEN } from '@/config'
+import WeatherDisplay from '@/app/components/WeatherDisplay'
 
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
@@ -308,20 +309,19 @@ const Welcome: FC<IWelcomeProps> = ({
     <div className='relative mobile:min-h-[48px] tablet:min-h-[64px]'>
       {hasSetInputs && renderHeader()}
       <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'>
-        {/*  Has't set inputs  */}
-        {
-          !hasSetInputs && (
-            <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
-              {hasVar
-                ? (
-                  renderVarPanel()
-                )
-                : (
-                  renderNoVarPanel()
-                )}
-            </div>
-          )
-        }
+        {/* Weather Display */}
+        {!hasSetInputs && (
+          <div className='mobile:pt-[36px] tablet:pt-[64px] pc:pt-[100px]'>
+            <WeatherDisplay />
+          </div>
+        )}
+
+        {/*  Main Content  */}
+        {!hasSetInputs && (
+          <div className='mt-4'>
+            {hasVar ? renderVarPanel() : renderNoVarPanel()}
+          </div>
+        )}
 
         {/* Has set inputs */}
         {hasSetInputs && renderHasSetInputs()}
