@@ -50,8 +50,8 @@ const Chat: FC<IChatProps> = ({
 }) => {
   const { t } = useTranslation()
   const { notify } = Toast
-  const isUseInputMethod = useRef(false)
   const isMobile = useIsMobile()
+  const isUseInputMethod = useRef(false)
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -120,9 +120,9 @@ const Chat: FC<IChatProps> = ({
   }
 
   return (
-    <div className={cn(!feedbackDisabled && 'px-3.5', 'flex flex-col h-full')}>
+    <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
-      <div className="flex-1 overflow-y-auto pb-[40px] space-y-[30px]">
+      <div className="h-full space-y-[30px]">
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
@@ -147,7 +147,7 @@ const Chat: FC<IChatProps> = ({
       </div>
       {
         !isHideSendInput && (
-          <div className={cn(!feedbackDisabled && 'mx-3.5', 'sticky bottom-0 left-0 right-0 min-h-[60px] bg-white')}>
+          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
             <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
                 visionConfig?.enabled && (
@@ -182,7 +182,6 @@ const Chat: FC<IChatProps> = ({
                 onKeyUp={handleKeyUp}
                 onKeyDown={handleKeyDown}
                 autoSize
-                {...(isMobile ? { inputMode: 'text' } : {})}
               />
               <div className="absolute bottom-2 right-2 flex items-center h-8">
                 <div className={`${s.count} mr-4 h-5 leading-5 text-sm bg-gray-50 text-gray-500`}>{query.trim().length}</div>
