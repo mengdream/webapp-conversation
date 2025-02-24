@@ -14,16 +14,7 @@ export interface WeatherData {
 }
 
 export const getWeatherData = async (): Promise<WeatherData> => {
-  // 添加时间戳参数防止缓存
-  const timestamp = new Date().getTime();
-  const response = await fetch(`/api/weather?_t=${timestamp}`, {
-    cache: 'no-store',
-    headers: {
-      'Pragma': 'no-cache',
-      'Cache-Control': 'no-cache'
-    }
-  });
-  
+  const response = await fetch('/api/weather');
   if (!response.ok) {
     throw new Error('Failed to fetch weather data');
   }

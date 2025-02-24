@@ -14,11 +14,8 @@ rm -rf $DEPLOY_DIR/*
 # 临时移除 .env.local（如果存在）
 [ -f .env.local ] && mv .env.local .env.local.backup
 
-# 清除 Next.js 缓存
-rm -rf .next/cache
-
 # 运行生产构建
-NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 npm run build
+NODE_ENV=production npm run build
 
 # 恢复 .env.local（如果之前存在）
 [ -f .env.local.backup ] && mv .env.local.backup .env.local

@@ -11,18 +11,10 @@ export async function GET(request: NextRequest) {
   const worksheetId = process.env.NEXT_PUBLIC_WEATHER_WORKSHEET_ID;
   const rowId = process.env.NEXT_PUBLIC_WEATHER_ROW_ID;
 
-  // 添加时间戳参数确保不使用缓存
-  const timestamp = Date.now();
-  const requestUrl = `${weatherUrl}api/v2/open/worksheet/getRowById?appKey=${appKey}&sign=${sign}&worksheetId=${worksheetId}&rowId=${rowId}&_t=${timestamp}`;
+  const requestUrl = `${weatherUrl}api/v2/open/worksheet/getRowById?appKey=${appKey}&sign=${sign}&worksheetId=${worksheetId}&rowId=${rowId}`;
 
   try {
-    const response = await fetch(requestUrl, {
-      cache: 'no-store',
-      headers: {
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache'
-      }
-    });
+    const response = await fetch(requestUrl);
 
     if (!response.ok) {
       throw new Error('Weather API response was not ok');
