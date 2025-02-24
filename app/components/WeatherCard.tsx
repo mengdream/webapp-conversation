@@ -1,6 +1,7 @@
-import { WeatherData } from '@/service/weather';
+import { WeatherData, getWeatherData } from '@/service/weather';
 import Image from 'next/image';
 import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 function getLocalWeatherIcon(url: string) {
   // 从 URL 中提取 day/01.png 这样的路径
@@ -10,11 +11,39 @@ function getLocalWeatherIcon(url: string) {
   return `/images/weather-icon/${match[1]}`;
 }
 
-interface WeatherCardProps {
-  data: WeatherData;
-}
+export default function WeatherCard() {
+  const [data, setData] = useState<WeatherData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-export default function WeatherCard({ data }: WeatherCardProps) {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const weatherData = await getWeatherData();
+        setData(weatherData);
+        setError(null);
+      } catch (err) {
+        setError('获取天气数据失败');
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
+        <p className="text-gray-500">加载中...</p>
+      </div>
+    );
+  }
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
       {/* Today's Weather */}
