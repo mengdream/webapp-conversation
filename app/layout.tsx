@@ -1,4 +1,5 @@
 import { getLocaleOnServer } from '@/i18n/server'
+import Watermark from './components/base/watermark'
 
 import './styles/globals.css'
 import './styles/markdown.scss'
@@ -18,6 +19,7 @@ const LocaleLayout = ({
         <div className="fixed inset-0 overflow-hidden">
           <div className="h-full min-w-[300px] relative">
             {children}
+            <Watermark />
           </div>
         </div>
       </body>
