@@ -70,6 +70,12 @@ const Main: FC<IMainProps> = () => {
     if (!isValid)
       setAuthError('访问未授权，请检查访问链接是否正确')
 
+    // 默认使用新会话，注释掉从 localStorage 读取会话ID的逻辑
+    // const conversationId = getConversationIdFromStorage(APP_ID)
+    // if (conversationId)
+    //   setCurrConversationId(conversationId, APP_ID, false)
+    setCurrConversationId('-1', APP_ID, false)
+
     if (APP_INFO?.title)
       document.title = `${APP_INFO.title} - Powered by 信息工程部`
   }, [APP_INFO?.title])
@@ -263,7 +269,8 @@ const Main: FC<IMainProps> = () => {
           throw new Error(error)
           return
         }
-        const _conversationId = getConversationIdFromStorage(APP_ID)
+        // const _conversationId = getConversationIdFromStorage(APP_ID)
+        const _conversationId = '-1'
         const isNotNewConversation = conversations.some(item => item.id === _conversationId)
 
         // fetch new conversation info
