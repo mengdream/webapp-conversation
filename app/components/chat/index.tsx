@@ -17,6 +17,7 @@ import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-u
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
 
+
 export type IChatProps = {
   chatList: ChatItem[]
   /**
