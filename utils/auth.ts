@@ -21,17 +21,39 @@ export const getSessionId = () => {
 }
 
 export const validateAccess = (userid: string, current: string, verify: string) => {
-  if (!userid)
+  if (!userid || !current || !verify)
     return false
-  if (!current)
-    return false
-  if (!verify)
-    return false
+
+  // 在生产环境下验证时间戳
+  if (process.env.NODE_ENV === 'production') {
+    // 验证时间格式是否正确（14位数字：年月日时分秒）
+    if (!/^\d{14}$/.test(current))
+      return false
+
+    // 解析时间字符串
+    const year = parseInt(current.substring(0, 4))
+    const month = parseInt(current.substring(4, 6)) - 1 // 月份从0开始
+    const day = parseInt(current.substring(6, 8))
+    const hour = parseInt(current.substring(8, 10))
+    const minute = parseInt(current.substring(10, 12))
+    const second = parseInt(current.substring(12, 14))
+
+    const timestamp = new Date(year, month, day, hour, minute, second).getTime()
+    const now = Date.now()
+    const fiveMinutes = 5 * 60 * 1000 // 5分钟的毫秒数
+
+    // 验证时间戳不能超过当前时间5分钟
+    if (Math.abs(now - timestamp) > fiveMinutes)
+      return false
+  }
+
   const verifyKey = process.env.NEXT_PUBLIC_VERIFY_KEY
   const stringToHash = `${userid}${current}${verifyKey}`
   const calcHash = md5(stringToHash)
+  
   if (verify !== calcHash)
     return false
+
   // 将 URL 中的 userid 设置为 session_id
   setSessionId(userid)
   return true
