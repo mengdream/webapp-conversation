@@ -90,4 +90,23 @@
 
 .textArea:focus+div .sendBtn {
   background-image: url(./icons/send-active.svg);
+}/* app/components/chat/style.module.css */
+.chatContainer {
+  height: 100vh;
+  height: 100dvh; /* 使用动态视口高度 */
+  display: flex;
+  flex-direction: column;
+}
+
+.messageList {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inputContainer {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 10;
 }
