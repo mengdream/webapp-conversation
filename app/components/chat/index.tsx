@@ -148,7 +148,7 @@ const Chat: FC<IChatProps> = ({
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
+            <div className='p-[5.5px] pb-[calc(5.5px_+_env(safe-area-inset-bottom))] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
                 visionConfig?.enabled && (
                   <>
