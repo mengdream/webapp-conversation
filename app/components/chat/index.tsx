@@ -18,6 +18,7 @@ import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
 import { useKeyboardHeight } from '@/app/hooks/use-keyboard-height'
 
+
 export type IChatProps = {
   chatList: ChatItem[]
   /**
