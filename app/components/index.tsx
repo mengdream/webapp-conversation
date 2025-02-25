@@ -263,7 +263,8 @@ const Main: FC<IMainProps> = () => {
           throw new Error(error)
           return
         }
-        const _conversationId = getConversationIdFromStorage(APP_ID)
+        // const _conversationId = getConversationIdFromStorage(APP_ID)
+        const _conversationId = '-1'
         const isNotNewConversation = conversations.some(item => item.id === _conversationId)
 
         // fetch new conversation info
