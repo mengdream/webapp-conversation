@@ -53,7 +53,7 @@ const Chat: FC<IChatProps> = ({
   const { notify } = Toast
   const isMobile = useIsMobile()
   const isUseInputMethod = useRef(false)
-  const keyboardHeight = useKeyboardHeight()
+  const { keyboardHeight, isDingTalkAndroidEnv } = useKeyboardHeight()
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -150,8 +150,8 @@ const Chat: FC<IChatProps> = ({
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')} style={{
-            paddingBottom: `${keyboardHeight}px`,
-            transition: 'padding-bottom 0.3s'
+            paddingBottom: isDingTalkAndroidEnv ? '240px' : `${keyboardHeight}px`,
+            transition: isDingTalkAndroidEnv ? undefined : 'padding-bottom 0.3s'
           }}>
             <div className='p-[5.5px] pb-[calc(5.5px_+_env(safe-area-inset-bottom))] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
