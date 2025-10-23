@@ -248,7 +248,14 @@ const handleStream = (
   read()
 }
 
+import { validateAccess, getUrlParams } from '@/utils/auth'
+
 const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: IOtherOptions) => {
+  // 检查URL参数中的验证信息
+  const { userid, verify, current } = getUrlParams()
+  if (!validateAccess(userid || '', current || '', verify || '')) {
+    return Promise.reject(new Error('Authentication failed'))
+  }
   const options = Object.assign({}, baseOptions, fetchOptions)
 
   const urlPrefix = API_PREFIX
