@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# 获取脚本所在目录的父目录（项目根目录）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# 切换到项目根目录
+cd "$PROJECT_ROOT" || exit 1
+
 # 设置变量
 DEPLOY_DIR="deploy"
 DEPLOY_REPO_DIR="deploy-repo"
@@ -21,22 +28,45 @@ NODE_ENV=production npm run build
 [ -f .env.local.backup ] && mv .env.local.backup .env.local
 
 # 复制必要的文件到部署目录
-cp -r .next $DEPLOY_DIR/
-# 删除缓存文件
-rm -rf $DEPLOY_DIR/.next/cache
+if [ -d ".next" ]; then
+  cp -r .next $DEPLOY_DIR/
+  # 删除缓存文件
+  rm -rf $DEPLOY_DIR/.next/cache
+else
+  echo "错误: .next 目录不存在，请先运行 npm run build"
+  exit 1
+fi
 
 # Copy static files
-cp -r public $DEPLOY_DIR/
+if [ -d "public" ]; then
+  cp -r public $DEPLOY_DIR/
+else
+  echo "警告: public 目录不存在"
+fi
 
 # Copy package files and configs
-cp package.json $DEPLOY_DIR/
-cp package-lock.json $DEPLOY_DIR/
+if [ -f "package.json" ]; then
+  cp package.json $DEPLOY_DIR/
+else
+  echo "错误: package.json 不存在"
+  exit 1
+fi
+
+if [ -f "package-lock.json" ]; then
+  cp package-lock.json $DEPLOY_DIR/
+else
+  echo "警告: package-lock.json 不存在"
+fi
+
 cp .env.production $DEPLOY_DIR/ 2>/dev/null || echo "No .env.production file"
 cp ecosystem.config.js $DEPLOY_DIR/ 2>/dev/null || echo "No ecosystem.config.js file"
 
 # 创建精简的 package.json（只包含生产依赖）
+PACKAGE_JSON_PATH="$PROJECT_ROOT/package.json"
+DEPLOY_PACKAGE_JSON="$PROJECT_ROOT/$DEPLOY_DIR/package.json"
+
 node -e "
-const pkg = require('./package.json');
+const pkg = require('$PACKAGE_JSON_PATH');
 const newPkg = {
   name: pkg.name,
   version: pkg.version,
@@ -46,7 +76,7 @@ const newPkg = {
   },
   dependencies: pkg.dependencies
 };
-require('fs').writeFileSync('$DEPLOY_DIR/package.json', JSON.stringify(newPkg, null, 2));
+require('fs').writeFileSync('$DEPLOY_PACKAGE_JSON', JSON.stringify(newPkg, null, 2));
 "
 
 # 复制到Git部署仓库（使用cp -a来保留所有属性，包括隐藏文件）
