@@ -20,10 +20,18 @@ export const getLocaleOnServer = (): Locale => {
     const negotiatorHeaders: Record<string, string> = {}
     headers().forEach((value, key) => (negotiatorHeaders[key] = value))
     // Use negotiator and intl-localematcher to get best locale
-    languages = new Negotiator({ headers: negotiatorHeaders }).languages()
+    // 剔除 '*'（无 Accept-Language 时 Negotiator 会返回 ['*']，会让 Intl 抛 RangeError）
+    languages = new Negotiator({ headers: negotiatorHeaders }).languages().filter(l => l !== '*')
   }
 
+  if (!languages.length)
+    return i18n.defaultLocale as Locale
+
   // match locale
-  const matchedLocale = match(languages, locales, i18n.defaultLocale) as Locale
-  return matchedLocale
+  try {
+    return match(languages, locales, i18n.defaultLocale) as Locale
+  }
+  catch {
+    return i18n.defaultLocale as Locale
+  }
 }

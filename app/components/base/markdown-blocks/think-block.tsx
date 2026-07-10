@@ -1,4 +1,5 @@
 // markdown-blocks/think-block.tsx
+'use client'
 import React from 'react'
 
 const hasEndThink = (children: any): boolean => {
@@ -33,10 +34,13 @@ const ThinkBlock = ({ children, ...props }: any) => {
   const forced = parseBool((props as any)['data-complete'])
   const isComplete = typeof forced === 'boolean' ? forced : hasEndThink(children)
   const displayContent = removeEndThink(children)
+  // 默认展开，点击 summary 仍可手动收起
+  const [open, setOpen] = React.useState(true)
 
   return (
     <details
-      {...(!isComplete && { open: true })}
+      open={open}
+      onToggle={(e: any) => setOpen(e.currentTarget.open)}
       className="group"
       style={{
         color: 'gray',
